@@ -31,14 +31,6 @@ public class RajawaliTutRenderer extends RajawaliRenderer {
 		mLight = new DirectionalLight(1f, 0.2f, -1.0f); // set the direction
 		mLight.setColor(1.0f, 1.0f, 1.0f);
 		mLight.setPower(3);
-
-		Bitmap bg = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.skysphere);
-		DiffuseMaterial material = new DiffuseMaterial();
-		mSphere = new Sphere(1, 18, 18);
-		mSphere.setMaterial(material);
-		mSphere.addLight(mLight);
-		mSphere.addTexture(mTextureManager.addTexture(bg));
-		//addChild(mSphere); //Queue an addition task for mSphere
 		
 		ObjParser objParser = new ObjParser(mContext.getResources(), mTextureManager, R.raw.simple_model_obj);
 		//StlParser stlParser = new StlParser(mContext.getResources(), mTextureManager, R.raw.simple_cube_stl);
