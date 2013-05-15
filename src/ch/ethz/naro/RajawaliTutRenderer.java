@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import rajawali.BaseObject3D;
 import rajawali.lights.DirectionalLight;
 import rajawali.materials.DiffuseMaterial;
@@ -39,7 +40,7 @@ public class RajawaliTutRenderer extends RajawaliRenderer {
 		mSphere.addTexture(mTextureManager.addTexture(bg));
 		//addChild(mSphere); //Queue an addition task for mSphere
 		
-		ObjParser objParser = new ObjParser(mContext.getResources(), mTextureManager, R.raw.testcube_obj);
+		ObjParser objParser = new ObjParser(mContext.getResources(), mTextureManager, R.raw.simple_model_obj);
 		//StlParser stlParser = new StlParser(mContext.getResources(), mTextureManager, R.raw.simple_cube_stl);
 		try {
 			//stlParser.parse();
@@ -53,9 +54,16 @@ public class RajawaliTutRenderer extends RajawaliRenderer {
 		mObject.setLight(mLight);
 		//mObject.setRotY(400);
 		//mObject.setRotZ(400);
+		//mObject.getX();
+		mObject.setX(0);
+		mObject.setY(0);
+		mObject.setZ(0);
 		addChild(mObject);
 
-		getCurrentCamera().setZ(4.2f);
+		getCurrentCamera().setZ(0);
+		//getCurrentCamera().setY(20);
+		getCurrentCamera().setX(40);
+		getCurrentCamera().setLookAt(0, 0, 0);
 	}
 	
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -64,7 +72,7 @@ public class RajawaliTutRenderer extends RajawaliRenderer {
 
 	public void onDrawFrame(GL10 glUnused) {
 		super.onDrawFrame(glUnused);
-		//mObject.setRotY(mObject.getRotY() + 1);
-		//mObject.setRotZ(mObject.getRotZ() + 1);
+		mObject.setRotY(mObject.getRotY() + 1);
+		mObject.setRotZ(mObject.getRotZ() + 1);
 	}
 }
