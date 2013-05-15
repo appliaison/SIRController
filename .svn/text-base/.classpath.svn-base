@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="lib" path="libs/xmlrpc.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/ros.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/ros_messages.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/ros_bootstrap.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/com.google.common-13.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.codec-1.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.httpclient-3.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.io-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.lang-2.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.net-2.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.pool-1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.ws.commons-1.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.jboss.netty-3.5.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.xbill-2.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ros"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ros_bootstrap"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ros_messages"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/xmlrpc"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

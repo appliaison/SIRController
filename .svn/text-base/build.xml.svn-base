@@ -1,0 +1,17 @@
+<project name="ros" basedir=".">
+  <target name="clean">
+    <delete includeemptydirs="true">
+      <fileset dir="${workspace}/mint/libs" includes="*.jar"/>
+    </delete> 
+  </target>
+  <target name="jar">
+    <copy todir="libs">
+      <fileset dir="${workspace}/xmlrpc/libs" includes="*.jar"/>
+      <fileset dir="${workspace}/ros_bootstrap/libs" includes="*.jar"/>
+    </copy>
+    <jar jarfile="libs/xmlrpc.jar" basedir="${workspace}/xmlrpc/bin" includes="**/*.class" update="true"/>
+    <jar jarfile="libs/ros_bootstrap.jar" basedir="${workspace}/ros_bootstrap/bin" includes="**/*.class" update="true"/>
+    <jar jarfile="libs/ros_messages.jar" basedir="${workspace}/ros_messages/bin" includes="**/*.class" update="true"/>
+    <jar jarfile="libs/ros.jar" basedir="${workspace}/ros/bin" includes="**/*.class" update="true"/>
+  </target>
+</project>

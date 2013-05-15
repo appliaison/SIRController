@@ -1,0 +1,22 @@
+package ch.ethz.mint;
+
+import org.ros.namespace.GraphName;
+import org.ros.node.AbstractNodeMain;
+import org.ros.node.ConnectedNode;
+import org.ros.node.topic.Publisher;
+
+import android.util.Log;
+
+public class Chatter extends AbstractNodeMain {
+	@Override
+	public GraphName getDefaultNodeName() {
+		return GraphName.of("chatter");
+	}
+
+  @Override
+  public void onStart(final ConnectedNode connectedNode) {
+    Log.i("mint", "onStart() called");
+    final Publisher<std_msgs.String> publisher =
+      connectedNode.newPublisher("chatter", std_msgs.String._TYPE);
+  }
+}

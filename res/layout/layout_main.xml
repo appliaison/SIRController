@@ -1,0 +1,81 @@
+<!-- main wrapper -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	
+    <!-- top wrapper -->
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="0dip"
+	    android:layout_weight="50">
+	
+	    	<RelativeLayout 
+	    	    android:id="@+id/top_l"
+	    	    android:layout_width="0dip"
+	    	    android:layout_weight="25"
+	    	    android:layout_height="match_parent"
+	    	    android:background="@color/gray">
+	    	    
+	    	</RelativeLayout>
+	    	
+	    	<RelativeLayout 
+	    	    android:id="@+id/top_m"
+	    	    android:layout_width="0dip"
+	    	    android:layout_weight="50"
+	    	    android:layout_height="match_parent"
+	    	    android:background="@color/white">
+	    	    
+	    	</RelativeLayout>
+	    	<RelativeLayout 
+	    	    android:id="@+id/top_r"
+	    	    android:layout_width="0dip"
+	    	    android:layout_weight="25"
+	    	    android:layout_height="match_parent"
+	    	    android:background="@color/gray">
+	    	    
+	    	</RelativeLayout>
+	    
+	</LinearLayout>
+	
+	<!-- bottom wrapper -->
+	<LinearLayout
+	    android:id="@+id/input"
+	    android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dip"
+	    android:layout_weight="50">
+	
+	    	<RelativeLayout 
+	    	    android:id="@+id/bottom_l"
+	    	    android:layout_width="0dip"
+	    	    android:layout_weight="25"
+	    	    android:layout_height="match_parent"
+	    	    android:background="@color/white">
+	    	    
+	    	</RelativeLayout>
+	    	<RelativeLayout 
+	    	    android:id="@+id/bottom_m"
+	    	    android:layout_width="0dip"
+	    	    android:layout_weight="50"
+	    	    android:layout_height="match_parent"
+	    	    android:background="@color/gray">
+	    	    
+	    	    	<TextView 
+	    	        android:id="@+id/text"
+	    	        android:layout_width="wrap_content"
+	    	        android:layout_height="wrap_content"/>
+	    	    
+	    	</RelativeLayout>
+	    	<RelativeLayout 
+	    	    android:id="@+id/bottom_r"
+	    	    android:layout_width="0dip"
+	    	    android:layout_weight="25"
+	    	    android:layout_height="match_parent"
+	    	    android:background="@color/white">
+	    	    
+	    	</RelativeLayout>
+	    
+	</LinearLayout>
+
+</LinearLayout>
