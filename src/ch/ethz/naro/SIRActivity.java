@@ -14,6 +14,7 @@ import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,7 +42,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
 // * Own Main Activity which combines: RosActivity & RajawaliActivity
 // 
 
-public abstract class SIRActivity extends Activity {
+public abstract class SIRActivity extends FragmentActivity {
 
   // ---- Ros ----------
   private static final int MASTER_CHOOSER_REQUEST_CODE = 0;

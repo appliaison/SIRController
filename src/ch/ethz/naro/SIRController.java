@@ -1,41 +1,30 @@
 package ch.ethz.naro;
 
-import java.util.EventObject;
-
 import org.ros.address.InetAddressFactory;
-import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
 import ch.ethz.naro.VirtualJoystick;
 
-import android.opengl.GLSurfaceView;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class SIRController extends SIRActivity{
 
   private VirtualJoystick joy1;
 	private VirtualJoystick joy2;
-	private GLSurfaceView cubeView;
+	
+	private LightControl light;
+	
+	private RobotModelRenderer cubeRenderer;
 	
 	private SpeedCmdRobo speedChatter;
+	private LightPublisher lightChatter;
+	private IMUsubscriber imuSub;
 	
-	private RajawaliTutRenderer cubeRenderer;
+	
 
 	public SIRController() {
     super("SIRController", "SIRController");
@@ -45,14 +34,17 @@ public class SIRController extends SIRActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_main);
-	
+		
+		
+	// Get different layouts
 		RelativeLayout blLay = (RelativeLayout) findViewById(R.id.bottom_l);
 		RelativeLayout brLay = (RelativeLayout) findViewById(R.id.bottom_r);
-		RelativeLayout tmLay = (RelativeLayout) findViewById(R.id.top_m);
+		FrameLayout tmLay = (FrameLayout) findViewById(R.id.tab_1);
+		RelativeLayout trLay = (RelativeLayout) findViewById(R.id.top_r);
 		
-    // -------- Add Rajawali Surface ----------
+    // -------- Add Model Surface ----------
 	
-    cubeRenderer = new RajawaliTutRenderer(this);
+    cubeRenderer = new RobotModelRenderer(this);
     cubeRenderer.setSurfaceView(mSurfaceView);
     super.setRenderer(cubeRenderer);
     tmLay.addView(mLayout); // mLayout from RajawaliActivity
@@ -60,6 +52,8 @@ public class SIRController extends SIRActivity{
     // -----------
 		// Init ROS Nodes
 		speedChatter = new SpeedCmdRobo();
+		lightChatter = new LightPublisher();
+		imuSub = new IMUsubscriber();
 
 		// ----------- Implement Joystick -----
 
@@ -68,7 +62,12 @@ public class SIRController extends SIRActivity{
 		joy2 = new VirtualJoystick(brLay,150, 150, 100, "JoyCamera");
 		joy2.addEventListener(speedChatter);
     
-		// ------------------------------------------		
+		// ------------------------------------------	
+		
+		// ---------- Implement Lightcontrol ---------
+		light = new LightControl(trLay);
+		light.addEventListener(lightChatter);
+		// -------------------------------------------
 	}
 	
 	@Override
@@ -85,6 +84,8 @@ public class SIRController extends SIRActivity{
         InetAddressFactory.newNonLoopback().getHostAddress(), getMasterUri());
     
     nodeMainExecutor.execute(speedChatter, nodeConfiguration);
+    nodeMainExecutor.execute(lightChatter, nodeConfiguration);
+    nodeMainExecutor.execute(imuSub, nodeConfiguration);
   }
 
 }

@@ -8,12 +8,12 @@ package org.ros.android;
 
 public final class R {
 	public static final class id {
-		public static final int master_chooser_qr_code_button = 0x7f09000e;
-		public static final int master_chooser_cancel = 0x7f090010;
-		public static final int linearLayout1 = 0x7f09000c;
-		public static final int master_chooser_new_master_button = 0x7f09000f;
-		public static final int master_chooser_uri = 0x7f09000b;
-		public static final int master_chooser_ok = 0x7f09000d;
+		public static final int master_chooser_qr_code_button = 0x7f09000f;
+		public static final int master_chooser_cancel = 0x7f090011;
+		public static final int linearLayout1 = 0x7f09000d;
+		public static final int master_chooser_new_master_button = 0x7f090010;
+		public static final int master_chooser_uri = 0x7f09000c;
+		public static final int master_chooser_ok = 0x7f09000e;
 	}
 	public static final class string {
 		public static final int qr_code = 0x7f050001;

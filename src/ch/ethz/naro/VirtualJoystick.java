@@ -7,28 +7,20 @@ import java.util.List;
 import ch.ethz.naro.JoyHandler.JoyHandlerListener;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Debug;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
-import android.widget.ToggleButton;
 
 public class VirtualJoystick implements OnCheckedChangeListener {
 	
