@@ -48,7 +48,7 @@ public class RobotModelRenderer extends RajawaliRenderer {
     mObject.setZ(0);
 
     // scale objact
-    mObject.setScale(0.01f);
+    mObject.setScale(0.007f);
     mObject.setDoubleSided(true);
 		addChild(mObject);
 

@@ -125,15 +125,15 @@ public class VirtualJoystick implements OnCheckedChangeListener {
 		// Create switches for axis-lock
 		// y-axis
 		lockY = new Switch(layout.getContext());
-		lockY.setX(startPosX-67);
-		lockY.setY(startPosY-radius-40);
+		lockY.setX(startPosX-95);
+		lockY.setY(startPosY-radius-70);
 		lockY.setOnCheckedChangeListener(this);
 		lockY.setId(2);
 		lockY.setChecked(true);
 		// x-axis
 		lockX = new Switch(layout.getContext());
-		lockX.setX(startPosX+radius+20-53); //-53 startdistanz from left 
-		lockX.setY(startPosY-16);
+		lockX.setX(startPosX+radius+15-53); //-53 startdistanz from left 
+		lockX.setY(startPosY-25);
 		lockX.setRotation(90);
 		lockX.setOnCheckedChangeListener(this);
 		lockX.setId(1);

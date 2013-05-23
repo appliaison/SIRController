@@ -43,12 +43,12 @@ public class SIRController extends SIRActivity{
 		RelativeLayout trLay = (RelativeLayout) findViewById(R.id.top_r);
 		
     // -------- Add Model Surface ----------
-	
+		
     cubeRenderer = new RobotModelRenderer(this);
     cubeRenderer.setSurfaceView(mSurfaceView);
     super.setRenderer(cubeRenderer);
     tmLay.addView(mLayout); // mLayout from RajawaliActivity
-
+    
     // -----------
 		// Init ROS Nodes
 		speedChatter = new SpeedCmdRobo();
@@ -57,9 +57,9 @@ public class SIRController extends SIRActivity{
 
 		// ----------- Implement Joystick -----
 
-		joy1 = new VirtualJoystick(blLay,150, 150, 100, "JoyRobot");
+		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
 		joy1.addEventListener(speedChatter);
-		joy2 = new VirtualJoystick(brLay,150, 150, 100, "JoyCamera");
+		joy2 = new VirtualJoystick(brLay,200, 230, 150, "JoyCamera");
 		joy2.addEventListener(speedChatter);
     
 		// ------------------------------------------	

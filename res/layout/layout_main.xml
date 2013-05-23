@@ -8,7 +8,7 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="0dip"
-	    android:layout_weight="50">
+	    android:layout_weight="65">
 	
 	    	<RelativeLayout 
 	    	    android:id="@+id/top_l"
@@ -22,7 +22,7 @@
 	    	<RelativeLayout 
 	    	    android:id="@+id/top_m"
 	    	    android:layout_width="0dip"
-	    	    android:layout_weight="50"
+	    	    android:layout_weight="70"
 	    	    android:layout_height="match_parent"
 	    	    android:background="@color/white">
 	    	    
@@ -50,7 +50,7 @@
 	    android:orientation="horizontal"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dip"
-	    android:layout_weight="50">
+	    android:layout_weight="35">
 	
 	    	<RelativeLayout 
 	    	    android:id="@+id/bottom_l"
@@ -63,7 +63,7 @@
 	    	<RelativeLayout 
 	    	    android:id="@+id/bottom_m"
 	    	    android:layout_width="0dip"
-	    	    android:layout_weight="50"
+	    	    android:layout_weight="70"
 	    	    android:layout_height="match_parent"
 	    	    android:background="@color/gray">
 	    	    

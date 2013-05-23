@@ -52,23 +52,31 @@ public class LightControl implements OnSeekBarChangeListener{
   public LightControl(RelativeLayout layout) {
     // init Variables
     Context context = layout.getContext();
-    int sliderTop = 30;
-    int sliderDistance = 40;
+    int sliderTop = 60;
+    int sliderDistance = 70;
     int maxValue = 255;
+    int paddingLabel = 6;
+    int paddingLeft = 30;
     
     // Create title
     TextView title = new TextView(context);
     title.setText("Light Control");
     title.setTypeface(null, Typeface.BOLD);
-    title.setX(20);
+    title.setX(paddingLeft);
     
     // Create labels
     TextView labelCam = new TextView(context);
-    labelCam.setText("CAM");
+    labelCam.setText("LED Cam");
+    labelCam.setY(sliderTop-paddingLabel);
+    labelCam.setX(paddingLeft);
     TextView labelLeft = new TextView(context);
-    labelLeft.setText("RIGHT");
+    labelLeft.setText("LED right");
+    labelLeft.setY(sliderTop+sliderDistance-paddingLabel);
+    labelLeft.setX(paddingLeft);
     TextView labelRight = new TextView(context);
-    labelRight.setText("LEFT");
+    labelRight.setText("LED left");
+    labelRight.setY(sliderTop+2*sliderDistance-paddingLabel);
+    labelRight.setX(paddingLeft);
     
     // create Slider
     _sliderCam = new SeekBar(context);
@@ -77,8 +85,10 @@ public class LightControl implements OnSeekBarChangeListener{
     _sliderCam.setMax(maxValue);
     _sliderLeft = new SeekBar(context);
     _sliderLeft.setId(2); // Left LED
+    _sliderLeft.setY(40);
     _sliderLeft.setY(sliderTop+sliderDistance); // set position from top
     _sliderLeft.setMax(maxValue);
+    
     _sliderRight = new SeekBar(context);
     _sliderRight.setId(3); // right LED
     _sliderRight.setY(sliderTop+2*sliderDistance);
@@ -98,6 +108,9 @@ public class LightControl implements OnSeekBarChangeListener{
     layout.addView(_sliderCam, params);
     layout.addView(_sliderLeft, params);
     layout.addView(_sliderRight, params);
+    layout.addView(labelCam);
+    layout.addView(labelLeft);
+    layout.addView(labelRight);
   }
 
   @Override

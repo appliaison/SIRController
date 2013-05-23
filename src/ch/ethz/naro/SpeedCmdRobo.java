@@ -13,6 +13,9 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 	
 	private Publisher<geometry_msgs.Twist> publisherRobo;
 	private Publisher<mbed_controller.SIRsetCAM> publisherCamera;
+	
+	private float _camPosPan;
+	private float _camPosTilt;
 
 	@Override
 	public GraphName getDefaultNodeName() {
@@ -22,7 +25,17 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		publisherRobo = connectedNode.newPublisher("sir/base_controller/cmd_vel", geometry_msgs.Twist._TYPE);
-		publisherCamera = connectedNode.newPublisher("sir/camera/pan_tilt", mbed_controller.SIRsetCAM._TYPE);
+		publisherCamera = connectedNode.newPublisher("mbed_com/pan_tilt", mbed_controller.SIRsetCAM._TYPE);
+		
+		// set initial camera position to [0.5; 0.5]
+		mbed_controller.SIRsetCAM initCamera = publisherCamera.newMessage();
+		initCamera.setPan(0.5f);
+		_camPosPan = 0.5f;
+		initCamera.setTilt(0.5f);
+		_camPosTilt = 0.5f;
+		
+		publisherCamera.publish(initCamera);
+		
 	}
 
   @Override
@@ -43,16 +56,39 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
     }
     // Send position cmd to camera
     if(handler.name == "JoyCamera") {
-      float x = handler.x;
-      float y = handler.y;
+      float speedPan = handler.x;
+      float speedTilt = handler.y;
+      
+      float maxStep = 0.1f;
   
-      float tilt = y*y*y;
-      float pan = x*x*x;
+      // check if position in Range [0,1]
+      // Pan
+      if(_camPosPan>=0 && _camPosPan<=1) {
+        // set new position
+        _camPosPan += maxStep*speedPan;
+        // check if out of boundes
+        if(_camPosPan<0) {
+          _camPosPan = 0;
+        } else if(_camPosPan>1) {
+          _camPosPan = 1;
+        }
+      }
+      // Tilt
+      if(_camPosTilt>=0 && _camPosTilt<=1) {
+        // set new position
+        _camPosTilt += maxStep*speedTilt;
+        // check if out of boundes
+        if(_camPosTilt<0) {
+          _camPosTilt = 0;
+        } else if(_camPosTilt>1) {
+          _camPosTilt = 1;
+        }
+      }
       
       // generate Camera Message  
       mbed_controller.SIRsetCAM camera = publisherCamera.newMessage();
-      camera.setPan(pan);
-      camera.setTilt(tilt);
+      camera.setPan(_camPosPan);
+      camera.setTilt(_camPosTilt);
 
       publisherCamera.publish(camera);
     }
