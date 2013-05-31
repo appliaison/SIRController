@@ -16,6 +16,9 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 	private Publisher<geometry_msgs.Twist> publisherRobo;
 	private Publisher<mbed_controller.SIRsetCAM> publisherCamera;
 	
+	private float speedX;
+	private float speedZ;
+	
 	private float _camPosPan;
 	private float _camPosTilt;
 
@@ -44,22 +47,19 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
   @Override
   public void handleJoyEvent(JoyHandler handler) {
     // Send speed cmd to robot
-    if(publisherRobo != null) { // check if publisher initalised
-      if(handler.name == "JoyRobot") {
-        Log.i(iTag, "Got event");
-        float x = handler.x;
-        float y = handler.y;
-    
-        float v = y*y*y;
-        float omega = x*x*x;
-        
-        // generate Twist Message  
-        geometry_msgs.Twist twist = publisherRobo.newMessage();
-        twist.getLinear().setX(v);      // set linear speed
-        twist.getAngular().setZ(omega); // set angular speed
-        
-        publisherRobo.publish(twist);
-      }
+    if(handler.name == "JoyRobot") {
+      float x = handler.x;
+      float y = handler.y;
+  
+      this.speedX = y*y*y;
+      this.speedZ = x*x*x;
+      
+      // generate Twist Message  
+      geometry_msgs.Twist twist = publisherRobo.newMessage();
+      twist.getLinear().setX(speedX);      // set linear speed
+      twist.getAngular().setZ(speedZ); // set angular speed
+      
+      publisherRobo.publish(twist);
     }
     
     // Send position cmd to camera
@@ -103,5 +103,7 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
       }
     } 
   }
+  
+  
 
 }

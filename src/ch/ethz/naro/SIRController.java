@@ -49,10 +49,17 @@ public class SIRController extends SIRActivity{
     tmLay.addView(mLayout); // mLayout from RajawaliActivity
     
     // -----------
+    
+    // -------- Add IMU Listener ----------
+    imuSub = new IMUsubscriber();
+    imuSub.addEventListener(cubeRenderer);
+    // ------------------------------------
+    
+    
 		// Init ROS Nodes
 		speedChatter = new SpeedCmdRobo();
 		lightChatter = new LightPublisher();
-		imuSub = new IMUsubscriber();
+		//imuSub = new IMUsubscriber();
 
 		// ----------- Implement Joystick -----
 		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
