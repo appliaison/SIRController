@@ -7,6 +7,7 @@ import org.ros.node.NodeMainExecutor;
 import ch.ethz.naro.VirtualJoystick;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -23,8 +24,6 @@ public class SIRController extends SIRActivity{
 	private SpeedCmdRobo speedChatter;
 	private LightPublisher lightChatter;
 	private IMUsubscriber imuSub;
-	
-	
 
 	public SIRController() {
     super("SIRController", "SIRController");
@@ -56,12 +55,10 @@ public class SIRController extends SIRActivity{
 		imuSub = new IMUsubscriber();
 
 		// ----------- Implement Joystick -----
-
 		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
 		joy1.addEventListener(speedChatter);
 		joy2 = new VirtualJoystick(brLay,200, 230, 150, "JoyCamera");
 		joy2.addEventListener(speedChatter);
-    
 		// ------------------------------------------	
 		
 		// ---------- Implement Lightcontrol ---------

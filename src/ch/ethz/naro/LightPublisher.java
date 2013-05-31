@@ -26,12 +26,12 @@ public class LightPublisher extends AbstractNodeMain implements LightHandlerList
 
   @Override
   public void handleLightEvent(LightHandler handler) {
-    Log.i("Light", "Got msg");
-    
+
     byte cam = (byte) (handler.cam & 0xFF);
     byte left = (byte) (handler.left & 0xFF);
     byte right = (byte) (handler.right  & 0xFF);
     
+    if (publisherLight != null) {
     // generate msg
     mbed_controller.SIRsetLEDs ledMSG = publisherLight.newMessage();
     ledMSG.setLEDCAM(cam);
@@ -39,7 +39,7 @@ public class LightPublisher extends AbstractNodeMain implements LightHandlerList
     ledMSG.setLEDRIGHT(right);
     
     publisherLight.publish(ledMSG);
-    
+    } 
   }
 
 }

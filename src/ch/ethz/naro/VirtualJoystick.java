@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -255,6 +256,8 @@ public class VirtualJoystick implements OnCheckedChangeListener {
 			params.setMargins(_posX, _posY, 0, 0);
 			stick.setLayoutParams(params);
 		}
+		
 		firePosition();
+		
 	}
 }
