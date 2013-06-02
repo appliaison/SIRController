@@ -7,7 +7,6 @@ import org.ros.node.NodeMainExecutor;
 import ch.ethz.naro.VirtualJoystick;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -24,6 +23,8 @@ public class SIRController extends SIRActivity{
 	private SpeedCmdRobo speedChatter;
 	private LightPublisher lightChatter;
 	private IMUsubscriber imuSub;
+	
+	private Plot testPlot; // Plot
 
 	public SIRController() {
     super("SIRController", "SIRController");
@@ -39,6 +40,7 @@ public class SIRController extends SIRActivity{
 		RelativeLayout blLay = (RelativeLayout) findViewById(R.id.bottom_l);
 		RelativeLayout brLay = (RelativeLayout) findViewById(R.id.bottom_r);
 		FrameLayout tmLay = (FrameLayout) findViewById(R.id.tab_1);
+		FrameLayout tab2 = (FrameLayout) findViewById(R.id.tab_2);
 		RelativeLayout trLay = (RelativeLayout) findViewById(R.id.top_r);
 		
     // -------- Add Model Surface ----------
@@ -59,7 +61,6 @@ public class SIRController extends SIRActivity{
 		// Init ROS Nodes
 		speedChatter = new SpeedCmdRobo();
 		lightChatter = new LightPublisher();
-		//imuSub = new IMUsubscriber();
 
 		// ----------- Implement Joystick -----
 		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
@@ -72,6 +73,11 @@ public class SIRController extends SIRActivity{
 		light = new LightControl(trLay);
 		light.addEventListener(lightChatter);
 		// -------------------------------------------
+		
+		// ---------- Plot ------------------------
+		testPlot = new Plot(tab2);
+		// ----------------------------------------
+
 	}
 	
 	@Override

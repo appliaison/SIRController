@@ -1,5 +1,8 @@
 package ch.ethz.naro;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
@@ -16,17 +19,51 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 	private Publisher<geometry_msgs.Twist> publisherRobo;
 	private Publisher<mbed_controller.SIRsetCAM> publisherCamera;
 	
-	private float speedX;
-	private float speedZ;
-	
 	private float _camPosPan;
 	private float _camPosTilt;
+	
+	private Timer mTimer;
+	private tTask_class tTask;
 
 	@Override
 	public GraphName getDefaultNodeName() {
 		return GraphName.of("SpeedCmdRobo");
 	}
 	
+	// ------
+	// Task manager for constant publishing
+	private class tTask_class extends TimerTask {
+	  private float spdX;
+	  private float spdZ;
+	  
+	  private Publisher<geometry_msgs.Twist> publisherRobo;
+	  
+	  public tTask_class(Publisher<geometry_msgs.Twist> d) {
+	    this.spdX = 0;
+	    this.spdZ = 0;
+	    this.publisherRobo = d;
+	  }
+	  
+	  public void setNewSpeeds(float spdx, float spdz) {
+	    synchronized(this) {
+	      this.spdX = spdx;
+	      this.spdZ = spdz;
+	    }
+	  }
+	  
+    @Override
+    public void run() {
+      geometry_msgs.Twist twist = publisherRobo.newMessage();
+      synchronized(this) {
+        twist.getLinear().setX(this.spdX);      // set linear speed
+        twist.getAngular().setZ(this.spdZ); // set angular speed
+      }
+      publisherRobo.publish(twist);
+    }
+	}
+	//---------
+	
+	// when ROS connected:
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 
@@ -42,24 +79,23 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 		
 		publisherCamera.publish(initCamera);
 		
+		tTask = new tTask_class(publisherRobo);
+		
+		mTimer = new Timer();
+		mTimer.schedule(tTask, 0, 20); // publish with const. 50 Hz
+		
 	}
 
+	// handle input from Joystick
   @Override
   public void handleJoyEvent(JoyHandler handler) {
     // Send speed cmd to robot
-    if(handler.name == "JoyRobot") {
-      float x = handler.x;
-      float y = handler.y;
-  
-      this.speedX = y*y*y;
-      this.speedZ = x*x*x;
-      
-      // generate Twist Message  
-      geometry_msgs.Twist twist = publisherRobo.newMessage();
-      twist.getLinear().setX(speedX);      // set linear speed
-      twist.getAngular().setZ(speedZ); // set angular speed
-      
-      publisherRobo.publish(twist);
+    if(publisherRobo != null) {
+      if(handler.name == "JoyRobot") {
+        float x = handler.x;
+        float y = handler.y;
+        this.tTask.setNewSpeeds(y*y*y, x*x*x);
+      }
     }
     
     // Send position cmd to camera
@@ -103,7 +139,5 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
       }
     } 
   }
-  
-  
-
+ 
 }
