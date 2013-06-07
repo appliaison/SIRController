@@ -17,12 +17,14 @@ public class SIRController extends SIRActivity{
 	private VirtualJoystick joy2;
 	
 	private LightControl light;
+	private ControlWindow control;
 	
 	private RobotModelRenderer cubeRenderer;
 	
 	private SpeedCmdRobo speedChatter;
 	private LightPublisher lightChatter;
 	private IMUsubscriber imuSub;
+	private CallService callService;
 	
 	private Plot testPlot; // Plot
 
@@ -61,6 +63,7 @@ public class SIRController extends SIRActivity{
 		// Init ROS Nodes
 		speedChatter = new SpeedCmdRobo();
 		lightChatter = new LightPublisher();
+		callService = new CallService();
 
 		// ----------- Implement Joystick -----
 		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
@@ -70,8 +73,9 @@ public class SIRController extends SIRActivity{
 		// ------------------------------------------	
 		
 		// ---------- Implement Lightcontrol ---------
-		light = new LightControl(trLay);
-		light.addEventListener(lightChatter);
+		control = new ControlWindow(trLay);
+		control.addEventListener(lightChatter);
+		control.addEventListener(callService);
 		// -------------------------------------------
 		
 		// ---------- Plot ------------------------
@@ -96,6 +100,7 @@ public class SIRController extends SIRActivity{
     nodeMainExecutor.execute(speedChatter, nodeConfiguration);
     nodeMainExecutor.execute(lightChatter, nodeConfiguration);
     nodeMainExecutor.execute(imuSub, nodeConfiguration);
+    nodeMainExecutor.execute(callService, nodeConfiguration);
   }
 
 }

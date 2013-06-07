@@ -35,7 +35,6 @@ public class IMUsubscriber extends AbstractNodeMain {
     Iterator i = _listeners.iterator();
     
     while(i.hasNext()) {
-      Log.i("Subscriber", "shoooot!");
       ((IMUhandlerListener) i.next()).handleIMUEvent(event);
     }
   } 
