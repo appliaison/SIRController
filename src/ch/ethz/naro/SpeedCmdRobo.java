@@ -68,7 +68,7 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 	public void onStart(final ConnectedNode connectedNode) {
 
 	  publisherRobo = connectedNode.newPublisher("sir/base_controller/cmd_vel", geometry_msgs.Twist._TYPE);
-		publisherCamera = connectedNode.newPublisher("mbed_com/pan_tilt", mbed_controller.SIRsetCAM._TYPE);
+		publisherCamera = connectedNode.newPublisher("sir/mbed_com/pan_tilt", mbed_controller.SIRsetCAM._TYPE);
 		
 		// set initial camera position to [0.5; 0.5]
 		mbed_controller.SIRsetCAM initCamera = publisherCamera.newMessage();
