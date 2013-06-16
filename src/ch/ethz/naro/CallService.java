@@ -1,11 +1,9 @@
 package ch.ethz.naro;
 
-import mbed_controller.ResetGyroRequest;
 import mbed_controller.ResetGyroResponse;
 
 import org.ros.exception.RemoteException;
 import org.ros.exception.ServiceNotFoundException;
-import org.ros.internal.message.RawMessage;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
@@ -22,7 +20,6 @@ public class CallService extends AbstractNodeMain implements ButtonHandlerListen
 
   private ServiceResponseListener<mbed_controller.ResetGyroResponse> serviceListener;
   
-  private mbed_controller.ResetGyroRequest request;
   @Override
   public GraphName getDefaultNodeName() {
     return GraphName.of("CallService");
@@ -31,7 +28,7 @@ public class CallService extends AbstractNodeMain implements ButtonHandlerListen
   @Override
   public void onStart(final ConnectedNode connectedNode) {
     try {
-      serviceIMU = connectedNode.newServiceClient("ResetGyro", "mbed_controller/ResetGyro");
+      serviceIMU = connectedNode.newServiceClient("/ResetGyro", "mbed_controller/ResetGyro");
       Log.i("IMUService","Service created");
       
     } catch (ServiceNotFoundException e) {
@@ -41,51 +38,37 @@ public class CallService extends AbstractNodeMain implements ButtonHandlerListen
       
     }
     
-    request = new ResetGyroRequest() {
-      
-      @Override
-      public RawMessage toRawMessage() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-    };
-    
+     // create costum service listener
      serviceListener = new ServiceResponseListener<ResetGyroResponse>() {
       
       @Override
       public void onSuccess(ResetGyroResponse response) {
-        // TODO Auto-generated method stub
-        Log.i("IMUService", "success!");
+        Log.i("IMUService", "call: success!");
         
       }
       
       @Override
       public void onFailure(RemoteException e) {
-        // TODO Auto-generated method stub
-        Log.i("IMUService", "failure");
+        Log.i("IMUService", "call: failure");
       }
     };
-    
+  
   }
 
   @Override
   public void handleButtonEvent(ButtonHandler handler) {
     // if IMUreset called
     if(handler.name == "IMUreset") {
-      Log.i("IMU", "Got event");
       
       if(serviceIMU != null) {
-        Log.i("IMUService", "try to call...");
         try {
+          mbed_controller.ResetGyroRequest request = serviceIMU.newMessage();
           serviceIMU.call(request, serviceListener);
-          Log.i("IMUService", "called!");
         } catch (Exception e) {
           Log.i("IMUservice", "catch called");
-          //Log.i("IMUservice", e.getMessage());    
+          e.printStackTrace();
         }
         
-      } else {
-        Log.i("IMUservice", "where is my Service?");
       }
     }
     

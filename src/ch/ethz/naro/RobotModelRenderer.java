@@ -9,7 +9,13 @@ import ch.ethz.naro.IMUHandler.IMUhandlerListener;
 import android.content.Context;
 import android.util.Log;
 import rajawali.BaseObject3D;
+import rajawali.lights.ALight;
 import rajawali.lights.DirectionalLight;
+import rajawali.lights.PointLight;
+import rajawali.lights.SpotLight;
+import rajawali.materials.DiffuseMaterial;
+import rajawali.materials.GouraudMaterial;
+import rajawali.materials.PhongMaterial;
 import rajawali.materials.SimpleMaterial;
 import rajawali.parser.AParser.ParsingException;
 import rajawali.parser.StlParser;
@@ -18,9 +24,10 @@ import rajawali.renderer.RajawaliRenderer;
 public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerListener {
 
 	private BaseObject3D mObject;
-	private DirectionalLight mLight;
+	//private SpotLight light;
+
 	
-	// init orientation robot
+	// orientation robot
 	private float angleX;
 	private float angleY;
 	private float angleZ;
@@ -32,14 +39,8 @@ public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerLi
 
 	protected void initScene() {
 	  // set background-color
-	  getCurrentScene().setBackgroundColor(0x000000);
+	  getCurrentScene().setBackgroundColor(0xffffff);
 	  
-	  // create light
-	  mLight = new DirectionalLight(1f, 0.2f, -1.0f); // set the direction
-	  mLight.setLookAt(0.0f, 0.0f, 0.0f);
-	  mLight.setColor(1.0f, 1.0f, 1.0f);
-	  mLight.setPower(5);
-		
 		// parse object from .stl
     StlParser stlParser = new StlParser(mContext.getResources(), mTextureManager, R.raw.model_sir_stl);
     try {
@@ -49,15 +50,24 @@ public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerLi
       e.printStackTrace();
     }
     
+    // create Object from .stl file
     mObject = stlParser.getParsedObject();
     
-    SimpleMaterial simple = new SimpleMaterial();
-    simple.setUseColor(true);
-    mObject.setMaterial(simple);
+    // add material to object
+    GouraudMaterial material = new GouraudMaterial();
+    material.setUseColor(true);
+    material.setAmbientColor(230);
+    mObject.setMaterial(material);
+    
     // set object color
-    mObject.setColor(0xffffff);
-    // add light
-    mObject.addLight(mLight);
+    mObject.setColor(0x000000);
+
+    // create light
+    SpotLight light = new SpotLight(0,-1,0);
+    light.setPosition(0, 10, 10);
+    light.setLookAt(0, 0, 0);
+    light.setPower(1);
+    mObject.addLight(light); // add Light
     
     // place object in the origin
     mObject.setX(0);
@@ -66,9 +76,8 @@ public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerLi
     
     // set init orientation
     angleX = 0;
-    angleY = 90;
-    angleZ = 90;
-    mObject.setRotation(angleX, angleY, angleZ);
+    angleY = 0;
+    angleZ = 0;
 
     // scale objact
     mObject.setScale(0.007f);
@@ -76,8 +85,9 @@ public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerLi
 		addChild(mObject);
 
 		// set camera
-		getCurrentCamera().setZ(4);
+		getCurrentCamera().setPosition(4, 0, 0);
 		getCurrentCamera().setLookAt(0, 0, 0);
+		getCurrentCamera().setRotZ(90);
 	}
 	
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -87,11 +97,7 @@ public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerLi
 	public void onDrawFrame(GL10 glUnused) {
 		super.onDrawFrame(glUnused);
 		
-		/*
-		mObject.setRotX(mObject.getRotX() + 1);
-		mObject.setRotY(mObject.getRotY() + 1);
-		*/
-
+		// update rotation on IMU
 		mObject.setRotation(angleX, angleY, angleZ);
 
 	}
@@ -100,9 +106,9 @@ public class RobotModelRenderer extends RajawaliRenderer implements IMUhandlerLi
   @Override
   public void handleIMUEvent(IMUHandler handler) {
     
-    Log.i("IMU", "got msg model");
+    //Log.i("IMU", "got msg model");
     this.angleX = (float) handler.angX;
     this.angleY = (float) handler.angY;
-    this.angleZ = (float) handler.angZ;  
+    this.angleZ = (float) -handler.angZ;  
   }
 }

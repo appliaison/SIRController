@@ -25,8 +25,13 @@ public class SIRController extends SIRActivity{
 	private LightPublisher lightChatter;
 	private IMUsubscriber imuSub;
 	private CallService callService;
+	private DrivetrainListener driveListener;
+	private VideoListener videoList;
 	
-	private Plot testPlot; // Plot
+	private PlotClass speedPlot; // Plot
+	private PlotClass torquePlot;
+	
+	private VideoWindow video;
 
 	public SIRController() {
     super("SIRController", "SIRController");
@@ -41,8 +46,10 @@ public class SIRController extends SIRActivity{
 	// Get different layouts
 		RelativeLayout blLay = (RelativeLayout) findViewById(R.id.bottom_l);
 		RelativeLayout brLay = (RelativeLayout) findViewById(R.id.bottom_r);
-		FrameLayout tmLay = (FrameLayout) findViewById(R.id.tab_1);
+		RelativeLayout bmLay = (RelativeLayout) findViewById(R.id.bottom_m);
+		FrameLayout tab1 = (FrameLayout) findViewById(R.id.tab_1);
 		FrameLayout tab2 = (FrameLayout) findViewById(R.id.tab_2);
+		FrameLayout tab3 = (FrameLayout) findViewById(R.id.tab_3);
 		RelativeLayout trLay = (RelativeLayout) findViewById(R.id.top_r);
 		
     // -------- Add Model Surface ----------
@@ -50,7 +57,7 @@ public class SIRController extends SIRActivity{
     cubeRenderer = new RobotModelRenderer(this);
     cubeRenderer.setSurfaceView(mSurfaceView);
     super.setRenderer(cubeRenderer);
-    tmLay.addView(mLayout); // mLayout from RajawaliActivity
+    bmLay.addView(mLayout); // mLayout from RajawaliActivity
     
     // -----------
     
@@ -64,6 +71,8 @@ public class SIRController extends SIRActivity{
 		speedChatter = new SpeedCmdRobo();
 		lightChatter = new LightPublisher();
 		callService = new CallService();
+		driveListener = new DrivetrainListener();
+		videoList = new VideoListener();
 
 		// ----------- Implement Joystick -----
 		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
@@ -79,8 +88,23 @@ public class SIRController extends SIRActivity{
 		// -------------------------------------------
 		
 		// ---------- Plot ------------------------
-		testPlot = new Plot(tab2);
+		speedPlot = new PlotClass(tab2, "speed", "motor speed", 4);
+		speedPlot.setTitle("Motor speeds");
+		speedPlot.setYBoundaries(-20, 20);
+		speedPlot.setYLabel("speed [cm/s]");
+		driveListener.addEventListener(speedPlot);
+		
+		torquePlot = new PlotClass(tab3, "torque", "motor torque", 4);
+		torquePlot.setTitle("Torque plot");
+		torquePlot.setYBoundaries(-60, 60);
+		torquePlot.setYLabel("torque [mNm]");
+		driveListener.addEventListener(torquePlot);
 		// ----------------------------------------
+		
+		// ---------- Video Stream ---------
+		video = new VideoWindow(tab1);
+		videoList.addEventListener(video);
+		// --------------------------------
 
 	}
 	
@@ -101,6 +125,8 @@ public class SIRController extends SIRActivity{
     nodeMainExecutor.execute(lightChatter, nodeConfiguration);
     nodeMainExecutor.execute(imuSub, nodeConfiguration);
     nodeMainExecutor.execute(callService, nodeConfiguration);
+    nodeMainExecutor.execute(driveListener, nodeConfiguration);
+    nodeMainExecutor.execute(videoList, nodeConfiguration);
   }
 
 }
