@@ -15,22 +15,23 @@ import ch.ethz.naro.IMUHandler.IMUhandlerListener;
 import ch.ethz.naro.VideoHandler.VideoHandlerListener;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+import sensor_msgs.CompressedImage;
 import sensor_msgs.Image;
 
 public class VideoListener extends AbstractNodeMain {
   
-  Subscriber<sensor_msgs.Image> videoListener;
+  Subscriber<sensor_msgs.CompressedImage> videoListener;
   private VideoView video;
   private ImageView image;
 
   private static String TAG = "Video";
   
-  private Bitmap[] pics;
   
   // ---- Event handler ------------
   private List _listeners = new ArrayList();
@@ -44,7 +45,7 @@ public class VideoListener extends AbstractNodeMain {
     _listeners.remove(listener);
   }
   
-  private synchronized void fireVideo(sensor_msgs.Image img) {
+  private synchronized void fireVideo(sensor_msgs.CompressedImage img) {
     //Log.i("IMU", "fireEvent called");
     VideoHandler event = new VideoHandler(this, img);
     
@@ -63,13 +64,13 @@ public class VideoListener extends AbstractNodeMain {
 
   public void onStart(ConnectedNode connectedNode) {
     
-    videoListener = connectedNode.newSubscriber("/gscam/image_raw", sensor_msgs.Image._TYPE);
+    videoListener = connectedNode.newSubscriber("/gscam/image_compressed/compressed", sensor_msgs.CompressedImage._TYPE);
     
-    videoListener.addMessageListener(new MessageListener<Image>() {
+    videoListener.addMessageListener(new MessageListener<sensor_msgs.CompressedImage>() {
       
       @Override
-      public void onNewMessage(Image msg) {
-        Log.i(TAG, "Got msg!");
+      public void onNewMessage(CompressedImage msg) {
+        //Log.i(TAG, "Got msg!");
         
         fireVideo(msg);
       }

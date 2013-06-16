@@ -1,23 +1,26 @@
 package ch.ethz.naro;
 
 import org.ros.address.InetAddressFactory;
+import org.ros.android.BitmapFromCompressedImage;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
+import ch.ethz.naro.VideoHandler.VideoHandlerListener;
 import ch.ethz.naro.VirtualJoystick;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-public class SIRController extends SIRActivity{
+public class SIRController extends SIRActivity implements VideoHandlerListener{
 
   private VirtualJoystick joy1;
 	private VirtualJoystick joy2;
-	
-	private LightControl light;
+
 	private ControlWindow control;
+	private StatusWindow status;
 	
 	private RobotModelRenderer cubeRenderer;
 	
@@ -27,11 +30,13 @@ public class SIRController extends SIRActivity{
 	private CallService callService;
 	private DrivetrainListener driveListener;
 	private VideoListener videoList;
+	private SensorListener sensorList;
 	
 	private PlotClass speedPlot; // Plot
 	private PlotClass torquePlot;
 	
 	private VideoWindow video;
+	private BitmapFromCompressedImage bitToCom;
 
 	public SIRController() {
     super("SIRController", "SIRController");
@@ -51,6 +56,7 @@ public class SIRController extends SIRActivity{
 		FrameLayout tab2 = (FrameLayout) findViewById(R.id.tab_2);
 		FrameLayout tab3 = (FrameLayout) findViewById(R.id.tab_3);
 		RelativeLayout trLay = (RelativeLayout) findViewById(R.id.top_r);
+		RelativeLayout tlLay = (RelativeLayout) findViewById(R.id.top_l);
 		
     // -------- Add Model Surface ----------
 		
@@ -73,6 +79,7 @@ public class SIRController extends SIRActivity{
 		callService = new CallService();
 		driveListener = new DrivetrainListener();
 		videoList = new VideoListener();
+		sensorList = new SensorListener();
 
 		// ----------- Implement Joystick -----
 		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
@@ -103,8 +110,14 @@ public class SIRController extends SIRActivity{
 		
 		// ---------- Video Stream ---------
 		video = new VideoWindow(tab1);
-		videoList.addEventListener(video);
+		videoList.addEventListener(this);
+		bitToCom = new BitmapFromCompressedImage();
 		// --------------------------------
+		
+		// -------- Status Window --------
+		status = new StatusWindow(tlLay);
+		sensorList.addEventListener(status);
+		// -------------------------------
 
 	}
 	
@@ -127,6 +140,20 @@ public class SIRController extends SIRActivity{
     nodeMainExecutor.execute(callService, nodeConfiguration);
     nodeMainExecutor.execute(driveListener, nodeConfiguration);
     nodeMainExecutor.execute(videoList, nodeConfiguration);
+    nodeMainExecutor.execute(sensorList, nodeConfiguration);
+  }
+
+  @Override
+  public void handleVideo(VideoHandler handler) {
+    
+    final Bitmap bit = bitToCom.call(handler.image);
+    
+    runOnUiThread(new Runnable() {
+      public void run() {
+        video.setBitmap(bit);
+     }
+ });
+    
   }
 
 }
