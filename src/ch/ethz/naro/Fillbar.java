@@ -1,6 +1,5 @@
 package ch.ethz.naro;
 
-import ch.ethz.naro.SensorHandler.SensorHandlerListener;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 public class Fillbar{
-  
-  private Activity _activity;
   
   private float _height;
   private float _width;
@@ -25,6 +22,10 @@ public class Fillbar{
   private float _defaultValue = 50;
   private float _value;
   
+  private Boolean _label;
+  private String _labelTop;
+  private String _labelBot;
+  
   private ImageView fillbar;
   private ImageView status;
     
@@ -32,7 +33,6 @@ public class Fillbar{
   
   public Fillbar(Activity acc, RelativeLayout layout, float width, float height) {
     // Init variables
-    _activity = acc;
     _width = width;
     _height = height;
     _fillColor = Color.CYAN;
@@ -40,31 +40,45 @@ public class Fillbar{
     _value = _defaultValue;
     // set default range
     setRange(0,100);
-    
+    // set labels
+    _label = true;
+    _labelBot = Float.toString(_minRange);
+    _labelTop = Float.toString(_maxRange);
     // craete outer bounding
     fillbar = new ImageView(layout.getContext());
     fillbar.setImageBitmap(createOuterRec());
-    fillbar.setX(100);
-    fillbar.setY(100);
     layout.addView(fillbar);
     
     // init filling
     status = new ImageView(layout.getContext());
     status.setImageBitmap(createFilling(_defaultValue));
-    status.setX(100);
-    status.setY(100);
     layout.addView(status);
        
   }
   
   private Bitmap createOuterRec() {
-    Bitmap bit = Bitmap.createBitmap((int)_width, (int) _height, Bitmap.Config.ARGB_8888);
+    int textWidth = 0;
+    if(_label) {textWidth = 100; }
+    Bitmap bit = Bitmap.createBitmap((int)_width + textWidth, (int) _height, Bitmap.Config.ARGB_8888);
     Paint paint = new Paint();
     paint.setStyle(Paint.Style.FILL);
     paint.setColor(_backgroundColor);
     Canvas canvas = new Canvas(bit);
     
     canvas.drawRect(0, 0, _width, _height, paint);
+    
+    if(_label) {
+    // add label
+      Paint textStyle = new Paint();
+      textStyle.setStyle(Paint.Style.FILL);
+      textStyle.setColor(Color.BLACK);
+      int textSize = 20;
+      textStyle.setTextSize(textSize);
+      
+      int padding = 5;
+      canvas.drawText(_labelBot, _width+padding, _height, textStyle); // Label Bottom
+      canvas.drawText(_labelTop, _width+padding, textSize, textStyle);
+    }
     
     return bit;
   }
@@ -112,6 +126,21 @@ public class Fillbar{
   
   public void setBackground(int color) {
     _backgroundColor = color;
+    fillbar.setImageBitmap(createOuterRec()); // update
+  }
+  
+  public void setLabelTop(String label) {
+    _labelTop = label;
+    fillbar.setImageBitmap(createOuterRec()); // update
+  }
+  
+  public void setLabelBottom(String label) {
+    _labelBot = label;
+    fillbar.setImageBitmap(createOuterRec()); // update
+  }
+  
+  public void enableLabel(Boolean bol) {
+    _label = bol;
     fillbar.setImageBitmap(createOuterRec()); // update
   }
   
