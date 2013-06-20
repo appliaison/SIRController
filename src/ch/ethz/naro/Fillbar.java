@@ -122,24 +122,4 @@ public class Fillbar{
     fillbar.setImageBitmap(createOuterRec());
     status.setImageBitmap(createFilling(_value));
   }
-
-  @Override
-  public void handleSensorEvent(SensorHandler handler) {
-    
-    final float value = (float) handler.lLeft;
-    //Log.i(TAG, Float.toString(value));
-    
-    _activity.runOnUiThread(new Runnable() {
-      
-      @Override
-      public void run() {
-        _fillColor = Color.GREEN;
-        setValue(value);
-      }
-    });
-    
-  }
-  
-  
-
 }
