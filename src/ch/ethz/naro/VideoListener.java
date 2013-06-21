@@ -64,7 +64,7 @@ public class VideoListener extends AbstractNodeMain {
 
   public void onStart(ConnectedNode connectedNode) {
     
-    videoListener = connectedNode.newSubscriber("/gscam/image_compressed/compressed", sensor_msgs.CompressedImage._TYPE);
+    videoListener = connectedNode.newSubscriber("/image_raw/compressed", sensor_msgs.CompressedImage._TYPE);
     
     videoListener.addMessageListener(new MessageListener<sensor_msgs.CompressedImage>() {
       

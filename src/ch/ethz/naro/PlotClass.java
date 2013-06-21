@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import ch.ethz.naro.BatteryHandler.BatteryHandlerListener;
 import ch.ethz.naro.DrivetrainHandler.DrivetrainHandlerListener;
 
 import com.androidplot.series.XYSeries;
@@ -22,7 +23,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 
-public class PlotClass implements DrivetrainHandlerListener {
+public class PlotClass implements DrivetrainHandlerListener, BatteryHandlerListener {
   
   // Plot
   private XYPlot _plot;
@@ -49,6 +50,8 @@ public class PlotClass implements DrivetrainHandlerListener {
       _dataSource = 1;
     } else if(dataSource == "torque") {
       _dataSource = 2;
+    } else if(dataSource == "current") {
+      _dataSource = 3;
     } else {
       Log.i("Plot", "I don't know what you wanna plot");
     }
@@ -126,22 +129,43 @@ public class PlotClass implements DrivetrainHandlerListener {
   // --------- Handle values ----------
   @Override
   public void handleDrivetrainEvent(DrivetrainHandler handler) {
-    
-    // get values from ROS
-    double [] data = handler.dynamic[_dataSource];
-    
-    for(int i=0;i<N; i++) {
-      _seriesContainer[i].addFirst(data[i], data[i]); // add new values at the beginning
+    if(_dataSource == 1 || _dataSource == 2) {
+      // get values from ROS
+      double [] data = handler.dynamic[_dataSource];
       
-      // free values at the end
-      if(_seriesContainer[i].size()>_maxX) {
-        _seriesContainer[i].removeLast();
+      for(int i=0;i<N; i++) {
+        _seriesContainer[i].addFirst(data[i], data[i]); // add new values at the beginning
+        
+        // free values at the end
+        if(_seriesContainer[i].size()>_maxX) {
+          _seriesContainer[i].removeLast();
+        }
       }
+      
+      _plot.redraw();
     }
-    
-    _plot.redraw();
   // -------------------------------------------
 
+  }
+
+  @Override
+  public void handleBatteryEvent(BatteryHandler handler) {
+    if(_dataSource == 3) {
+      // get values from ROS
+      double data = handler.current;
+      
+      for(int i=0;i<N; i++) {
+        _seriesContainer[i].addFirst(data, data); // add new values at the beginning
+        
+        // free values at the end
+        if(_seriesContainer[i].size()>_maxX) {
+          _seriesContainer[i].removeLast();
+        }
+      }
+      
+      _plot.redraw();
+    }
+    
   }
   
   // -------- functions for adaption ---------

@@ -30,7 +30,7 @@ public class SensorListener extends AbstractNodeMain {
     _listeners.remove(listener);
   }
   
-  private synchronized void fireDistance(double left, double right) {
+  private synchronized void fireSensorData(double left, double right) {
     //Log.i("IMU", "fireEvent called");
     SensorHandler event = new SensorHandler(this, left, right);
     
@@ -48,16 +48,17 @@ public class SensorListener extends AbstractNodeMain {
   }
   
   public void onStart(ConnectedNode connectedNode) {
-    Subscriber<mbed_controller.SIRDistances> distance = connectedNode.newSubscriber("Sensors/Distance", mbed_controller.SIRDistances._TYPE);
+    Subscriber<mbed_controller.SIRDistances> distance = connectedNode.newSubscriber("Sensors/Distances", mbed_controller.SIRDistances._TYPE);
     
     distance.addMessageListener(new MessageListener<mbed_controller.SIRDistances>() {
       
       @Override
       public void onNewMessage(mbed_controller.SIRDistances message) {
+        
         double lLeft = message.getLowerleft();
         double lRight = message.getLowerright();
         
-        fireDistance(lLeft, lRight);
+        fireSensorData(lLeft, lRight);
       }
     });
   }

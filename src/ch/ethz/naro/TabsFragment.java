@@ -54,6 +54,7 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		mTabHost.addTab(newTab("video", "Video", R.id.tab_1));
 		mTabHost.addTab(newTab("sPlot", "Speed Plot", R.id.tab_2));
 		mTabHost.addTab(newTab("tPlot", "Torque Plot", R.id.tab_3));
+		mTabHost.addTab(newTab("cPlot", "Current Plot", R.id.tab_4));
 	}
 
 	private TabSpec newTab(String tag, String labelId, int tabContentId) {
