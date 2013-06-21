@@ -1,6 +1,5 @@
 package ch.ethz.naro;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,7 +13,6 @@ public class Fillbar{
   private float _width;
   private float _minRange;
   private float _maxRange;
-  private float _rangeConv;
   
   private int _fillColor;
   private int _backgroundColor;
@@ -26,32 +24,39 @@ public class Fillbar{
   private String _labelTop;
   private String _labelBot;
   
+  private Float _posX;
+  private Float _posY;
+  
   private ImageView fillbar;
   private ImageView status;
+  
+  private RelativeLayout _layout;
     
   private static String TAG = "Fillbar";
   
-  public Fillbar(Activity acc, RelativeLayout layout, float width, float height) {
+  public Fillbar(RelativeLayout layout) {
     // Init variables
-    _width = width;
-    _height = height;
+    _layout = layout;
+    _width = 30;
+    _height = 100;
     _fillColor = Color.CYAN;
-    _backgroundColor = Color.YELLOW;
+    _backgroundColor = Color.BLUE;
     _value = _defaultValue;
+    _posX = 0.0f;
+    _posY = 0.0f;
     // set default range
     setRange(0,100);
     // set labels
     _label = true;
     _labelBot = Float.toString(_minRange);
     _labelTop = Float.toString(_maxRange);
-    // craete outer bounding
-    fillbar = new ImageView(layout.getContext());
-    fillbar.setImageBitmap(createOuterRec());
-    layout.addView(fillbar);
     
-    // init filling
-    status = new ImageView(layout.getContext());
-    status.setImageBitmap(createFilling(_defaultValue));
+    fillbar = new ImageView(_layout.getContext());
+    status = new ImageView(_layout.getContext());
+    // create Rectangles
+    updateView();
+    
+    layout.addView(fillbar);
     layout.addView(status);
        
   }
@@ -83,7 +88,6 @@ public class Fillbar{
     return bit;
   }
   
-  
   private Bitmap createFilling(float fil) {
     
     Bitmap bit = Bitmap.createBitmap((int)_width, (int) _height, Bitmap.Config.ARGB_8888);
@@ -93,62 +97,84 @@ public class Fillbar{
     Canvas canvas = new Canvas(bit);
     
     // check fil status
-    float value;
-    if(fil > _maxRange) {value = _maxRange;}
-    else if(fil < _minRange) {value = _minRange;}
-    else {value = fil;}
-    
-    float height = value*_rangeConv;
+    float height;
+    if(fil > _maxRange) {height = _height;}
+    else if(fil < _minRange) {height = 0;}
+    else {height=(_value-_minRange)*_height/(_maxRange-_minRange);}
     
     // draw rect
     canvas.drawRect(0, _height-height, _width, _height, paint);
     return bit;
   }
   
+  private void updateView() {
+    // craete outer bounding
+    fillbar.setImageBitmap(createOuterRec());
+    fillbar.setX(_posX);
+    fillbar.setY(_posY);
+
+    // set filling
+    status.setImageBitmap(createFilling(_value));
+    status.setX(_posX);
+    status.setY(_posY);
+
+  }
+  
   public void setRange(float min, float max) {
     // set Range
     _minRange = min;
     _maxRange = max;
-    // set range conversion factor
-    _rangeConv = _height/(_maxRange-_minRange);
+    
+    _labelBot = Float.toString(_minRange);
+    _labelTop = Float.toString(_maxRange);
+    
+    //updateView();
   }
   
   public void setValue(float value) {
     _value = value;
     // update filling with new value
-    status.setImageBitmap(createFilling(value));
+    updateView();
+  }
+  
+  public float getValue() {
+    return _value;
   }
   
   public void setColor(int color) {
     _fillColor = color;
-    status.setImageBitmap(createFilling(_value)); // update filling
+    updateView();
   }
   
   public void setBackground(int color) {
     _backgroundColor = color;
-    fillbar.setImageBitmap(createOuterRec()); // update
+    updateView();
   }
   
   public void setLabelTop(String label) {
     _labelTop = label;
-    fillbar.setImageBitmap(createOuterRec()); // update
+    updateView();
   }
   
   public void setLabelBottom(String label) {
     _labelBot = label;
-    fillbar.setImageBitmap(createOuterRec()); // update
+    updateView();
   }
   
   public void enableLabel(Boolean bol) {
     _label = bol;
-    fillbar.setImageBitmap(createOuterRec()); // update
+    updateView();
   }
   
   public void setSize(float width, float height) {
     _width = width;
     _height = height;
-    // update
-    fillbar.setImageBitmap(createOuterRec());
-    status.setImageBitmap(createFilling(_value));
+    updateView();
+  }
+  
+  public void setPosition(float x, float y) {
+    _posX = x;
+    _posY = y;
+    updateView();
   }
 }
