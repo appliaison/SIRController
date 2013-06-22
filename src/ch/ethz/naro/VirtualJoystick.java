@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import sun.swing.plaf.synth.Paint9Painter.PaintType;
+
 import ch.ethz.naro.JoyHandler.JoyHandlerListener;
 
 import android.annotation.SuppressLint;
@@ -110,8 +112,9 @@ public class VirtualJoystick implements OnCheckedChangeListener {
 		stick.setLayoutParams(params);	
 		
 		// Draw Circle
+		int textHeight=40;
 		int wScreen = startPosX+radius;
-		int hScreen= startPosY+radius;
+		int hScreen= startPosY+radius+textHeight;
 		Bitmap pallet = Bitmap.createBitmap(wScreen, hScreen, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(pallet);
 		Paint paint = new Paint(); 
@@ -119,6 +122,12 @@ public class VirtualJoystick implements OnCheckedChangeListener {
 		canvas.drawCircle(startPosX, startPosY, radius, paint);
 		canvas.drawLine(startPosX, startPosY+radius, startPosX, startPosY-radius, paint); // draw vertical line
 		canvas.drawLine(startPosX+radius, startPosY, startPosX-radius, startPosY, paint); // draw hotizontal line
+		
+		// Label the Joystick
+		Paint text = new Paint();
+		text.setTextSize(20);
+		text.setStyle(Paint.Style.FILL);
+		canvas.drawText(name, startPosX, startPosY+radius+20, text);
 		
 		ImageView circle = new ImageView(layout.getContext());
 		circle.setImageBitmap(pallet);
