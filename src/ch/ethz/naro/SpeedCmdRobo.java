@@ -47,7 +47,7 @@ public class SpeedCmdRobo extends AbstractNodeMain implements JoyHandlerListener
 	  public void setNewSpeeds(float spdx, float spdz) {
 	    synchronized(this) {
 	      this.spdX = spdx;
-	      this.spdZ = spdz;
+	      this.spdZ = -spdz; // negative sign for intuitive turning 
 	    }
 	  }
 	  

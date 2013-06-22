@@ -86,7 +86,7 @@ public class SIRController extends SIRActivity implements VideoHandlerListener{
 		batteryList = new BatteryListener();
 
 		// ----------- Implement Joystick -----
-		joy1 = new VirtualJoystick(blLay,200, 230, 150, "JoyRobot");
+		joy1 = new VirtualJoystick(blLay,250, 230, 150, "JoyRobot");
 		joy1.addEventListener(speedChatter);
 		joy2 = new VirtualJoystick(brLay,200, 230, 150, "JoyCamera");
 		joy2.addEventListener(speedChatter);
